@@ -7,7 +7,6 @@ def post_by_category(request, Category_id):
     category = get_object_or_404(Categories, pk=Category_id)
     posts = Blog.objects.filter(Category_id=Category_id, Status="Published").order_by('-Created_at')
 
-
     context = {
         'posts': posts,
         'category': category,
