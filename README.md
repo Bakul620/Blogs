@@ -1,96 +1,219 @@
 # Django Blog Project
 
-A simple Django blog application with featured posts, recent articles, category pages, post detail pages, and social links in the sidebar.
+A multi-app Django blog platform with public blog pages, user authentication, and a dashboard for managing categories and posts.
 
-## Features
+## Table of Contents
 
-- Home page with featured posts and recent articles
-- Blog detail page for individual posts
-- Category-based post listings
-- Image upload support for posts
-- Sidebar with search, categories, and social links
-- Bootstrap-based responsive layout
+- [Project Overview](#project-overview)
+- [Main Features](#main-features)
+- [Tech Stack](#tech-stack)
+- [Project Structure](#project-structure)
+- [Getting Started](#getting-started)
+- [How to Run](#how-to-run)
+- [URL Map](#url-map)
+- [Useful Commands](#useful-commands)
+- [Notes](#notes)
+
+## Project Overview
+
+This project is organized into separate Django apps:
+
+- `blogs`: blog posts, categories, search, and blog detail pages.
+- `about`: about content and social links.
+- `dashboards`: dashboard pages for post/category CRUD operations.
+- `blog_main`: project-level settings, root URLs, authentication views, and home page.
+
+## Main Features
+
+- Public home page with featured and latest published posts.
+- Post detail page using slug-based URLs.
+- Category-wise post listing.
+- Search across title, description, and post body.
+- User registration, login, and logout.
+- Dashboard section for:
+	- Category add/edit/delete
+	- Post add/edit/delete
+- Image upload support for blog posts.
+- Shared sidebar data via context processors (categories and social links).
 
 ## Tech Stack
 
 - Python 3
-- Django 5.2
-- SQLite
-- Bootstrap 4
-- Pillow for image uploads
+- Django 5.2.13
+- SQLite (default database)
+- django-crispy-forms + crispy-bootstrap4
+- Pillow (image upload processing)
 
 ## Project Structure
 
-- `blog_main/` - Django project settings and main app
-- `blogs/` - Blog app with models, views, URLs, and templates
-- `templates/` - Shared HTML templates
-- `static/` - CSS and other static assets
-- `media/` - Uploaded images
-- `requirements.txt` - Python dependencies used to install the project environment
-
-## Setup Instructions
-
-### 1. Clone the repository
-
-```bash
-git clone <your-repository-link>
-cd "blog_main"
+```text
+blog_main/
+├── manage.py
+├── db.sqlite3
+├── requirements.txt
+├── README.md
+├── about/
+│   ├── models.py
+│   ├── views.py
+│   ├── admin.py
+│   ├── apps.py
+│   ├── tests.py
+│   └── migrations/
+│       ├── __init__.py
+│       ├── 0001_initial.py
+│       └── 0002_sociallink.py
+├── blogs/
+│   ├── models.py
+│   ├── views.py
+│   ├── urls.py
+│   ├── context_processors.py
+│   ├── admin.py
+│   ├── apps.py
+│   ├── tests.py
+│   └── migrations/
+│       ├── __init__.py
+│       ├── 0001_initial.py
+│       ├── 0002_alter_categories_options_blog.py
+│       └── 0003_alter_blog_status.py
+├── dashboards/
+│   ├── forms.py
+│   ├── views.py
+│   ├── urls.py
+│   ├── admin.py
+│   ├── apps.py
+│   ├── models.py
+│   ├── tests.py
+│   └── migrations/
+│       └── __init__.py
+├── blog_main/
+│   ├── settings.py
+│   ├── urls.py
+│   ├── views.py
+│   ├── form.py
+│   ├── asgi.py
+│   ├── wsgi.py
+│   └── __init__.py
+├── templates/
+│   ├── base.html
+│   ├── home.html
+│   ├── blog_detail.html
+│   ├── post_by_category.html
+│   ├── search.html
+│   ├── register.html
+│   ├── login.html
+│   └── dashboard/
+│       ├── dashboard.html
+│       ├── sidebar.html
+│       ├── categories.html
+│       ├── add_category.html
+│       ├── edit_category.html
+│       ├── posts.html
+│       ├── add_post.html
+│       └── edit_post.html
+├── static/
+│   ├── css/
+│   │   └── blog.css
+│   └── images/
+└── media/
+    └── uploads/
 ```
 
-### 2. Create and activate a virtual environment
+## Getting Started
+
+### 1. Clone and enter project
+
+```bash
+git clone <your-repository-url>
+cd blog_main
+```
+
+### 2. Create virtual environment
 
 ```bash
 python -m venv .venv
-.venv\Scripts\activate
 ```
 
-### 3. Install dependencies
+### 3. Activate environment
+
+Windows PowerShell:
+
+```powershell
+.venv\Scripts\Activate.ps1
+```
+
+Windows CMD:
+
+```bat
+.venv\Scripts\activate.bat
+```
+
+macOS/Linux:
+
+```bash
+source .venv/bin/activate
+```
+
+### 4. Install dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-This installs the packages listed in requirements.txt, including Django and Pillow.
-
-### 4. Run migrations
+### 5. Apply migrations
 
 ```bash
 python manage.py migrate
 ```
 
-### 5. Create a superuser
+### 6. Create admin user (optional but recommended)
 
 ```bash
 python manage.py createsuperuser
 ```
 
-### 6. Start the development server
+## How to Run
 
 ```bash
 python manage.py runserver
 ```
 
-Then open:
+Open in browser:
 
-```bash
-http://127.0.0.1:8000/
-```
+- http://127.0.0.1:8000/
 
-## Notes
+## URL Map
 
-- Uploaded blog images are stored in `media/uploads/`.
-- The project uses SQLite by default.
-- If you want to share the project publicly, make sure `DEBUG = False`, configure `ALLOWED_HOSTS`, and set up static/media handling for deployment.
+- `/` -> Home page
+- `/admin/` -> Django admin panel
+- `/register/` -> User registration
+- `/login/` -> User login
+- `/logout/` -> User logout
+- `/category/<id>/` -> Posts by category
+- `/blogs/search/` -> Blog search
+- `/blogs/<slug>/` -> Blog detail
+- `/dashboard/` -> Dashboard home
+- `/dashboard/categories/` -> Category list
+- `/dashboard/category/add/` -> Add category
+- `/dashboard/category/edit/<id>/` -> Edit category
+- `/dashboard/category/delete/<id>/` -> Delete category
+- `/dashboard/posts/` -> Post list
+- `/dashboard/posts/add/` -> Add post
+- `/dashboard/post/edit/<id>/` -> Edit post
+- `/dashboard/post/delete/<id>/` -> Delete post
 
-## Common Commands
+## Useful Commands
 
 ```bash
 python manage.py makemigrations
 python manage.py migrate
 python manage.py runserver
 python manage.py createsuperuser
+python manage.py collectstatic
 ```
 
-## License
+## Notes
 
-This project does not currently include a license.
+- Uploaded files are stored under `media/uploads/`.
+- Static files are configured using `STATICFILES_DIRS` and `STATIC_ROOT` in settings.
+- Context processors are configured for categories and social links.
+- For production deployment, set `DEBUG = False`, configure `ALLOWED_HOSTS`, and serve static/media from a proper web server.
