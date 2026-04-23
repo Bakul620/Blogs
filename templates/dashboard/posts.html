@@ -6,13 +6,16 @@
     
 	<div class="col-md-9">
 		<h2> All Posts </h2>
+        <a href="{% url 'add_post' %}" class="btn btn-dark text-light mb-2 float-right">Add New</a>
 	    <table class="table table-hover">
             <thead>
                 <tr>
                     <th >#</th>
                     <th >Post Title</th>
-                    <th >Created At</th>
-                    <th >Updated At</th>
+                    <th >Category</th>
+                    <th >Author</th>
+                    <th >Status</th>
+                    <th >Featured</th>
                     <th >Actions</th>
                 </tr>
             </thead>
@@ -21,11 +24,13 @@
                     <tr>
                         <td >{{ forloop.counter }}</td>
                         <td >{{ post | truncatewords:4 }}</td>
-                        <td >{{ post.Created_at }}</td>
-                        <td >{{ post.Updated_at }}</td>
+                        <td >{{ post.Category }}</td>
+                        <td >{{ post.Author }}</td>
+                        <td >{{ post.Status }}</td>
+                        <td >{% if post.Is_featured %}<i class="fa fa-check text-success"></i>{% else %}<i class="fa fa-times text-danger"></i>{% endif %}</td>
                         <td >
-                            <a href="#" class="btn btn-sm btn-primary">Edit</a>
-                            <a href="#" class="btn btn-sm btn-danger">Delete</a>
+                            <a href="{% url 'edit_post' post.id %}" ><i class="fa fa-edit btn-primary"></i></a> &nbsp;
+                            <a href="{% url 'delete_post' post.id %}" ><i class="fa fa-trash btn-sm btn-danger"></i></a>
                         </td>
                     </tr>
                 {% endfor %}
