@@ -1,6 +1,7 @@
-from django.shortcuts import get_object_or_404, render
+from django.http import HttpResponseRedirect
+from django.shortcuts import get_object_or_404, redirect, render
 
-from .models import Blog, Categories
+from .models import Blog, Categories,Comment
 from django.db.models import Q
 
 def post_by_category(request, Category_id):
@@ -15,8 +16,18 @@ def post_by_category(request, Category_id):
 
 def blog_detail(request, slug):
     single_blog = get_object_or_404(Blog, Slug=slug, Status="Published")
+    if request.method == 'POST':
+        comment = Comment()
+        comment.Blog = single_blog
+        comment.User = request.user
+        comment.Comment_text = request.POST.get('comment')
+        comment.save()
+        return HttpResponseRedirect(request.path_info)
+
+    comment=Comment.objects.filter(Blog=single_blog)
     context = {
         'single_blog': single_blog,
+        'comments': comment,
     }
     return render(request, 'blog_detail.html', context)
 

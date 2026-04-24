@@ -24,6 +24,41 @@
 
 				<p class="lead">{{ single_blog.Description }}</p>
 				<p>{{ single_blog.Blog_body|linebreaks }}</p>
+
+				{% comment %} comments {% endcomment %}
+
+				<h3>Comments ({{ comments.count }})</h3>
+				{% if comments %}
+				{% for comment in comments %}
+				<div class="card mt-1">
+					<div class="card-body">
+						<p class="card-text">{{ comment }}</p>
+						<span>
+							<small>By {{ comment.User }}</small>
+							<small> | {{ comment.Created_at | timesince }} ago.</small>
+						</span>
+					</div>
+				</div>
+				{% endfor %}
+				{% else %}
+				No comments yet.
+				{% endif %}
+				<br>
+				<div class="form-group">
+					{% if user.is_authenticated %}
+					<form action="" method="POST">
+						{% csrf_token %}
+						<div class="form-group">
+							<textarea name="comment" class="form-control"  placeholder="Write your comment here..."></textarea>
+							
+						</div>
+						<button type="submit" class="btn btn-primary">Submit Comment</button>
+					</form> 
+					{% else %}
+					<p>Please <a href="{% url 'login' %}">login</a> to write a comment!</p>
+					{% endif %}
+
+				</div> 
 			</div>
 		</div>
 
