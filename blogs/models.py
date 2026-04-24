@@ -23,7 +23,7 @@ class Blog(models.Model):
     Image = models.ImageField(upload_to='uploads/%Y/%m/%d')
     Category = models.ForeignKey(Categories, on_delete=models.CASCADE)
     Slug = models.SlugField(max_length=150, unique=True,blank=True)
-    Blog_body = models.TextField(max_length=2000)
+    Blog_body = models.TextField(max_length=5000)
     Status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="Draft")
     Is_featured = models.BooleanField(default=False)
     Created_at = models.DateTimeField(auto_now_add=True)

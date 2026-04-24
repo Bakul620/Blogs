@@ -16,8 +16,7 @@
 <h3 class = "pb-2 border-bottom text-warning" style="letter-spacing: 2px;">Featured Posts</h3> 
   <div class="row mb-2">
     {% for post in featured_posts %}
-      {% if not forloop.first %}
-    <div class="col-md-6">
+    <div class="col-md-4">
       <div class="card border-0" >
         <div class="card-body">
           <h3> <a href="{% url 'blog_detail' slug=post.Slug %}" class="text-dark">{{ post.Title }}</a></h3>
@@ -26,8 +25,7 @@
         </div>
       </div>
     </div>
-      {% endif %}
-    {% endfor %}
+    {% endfor %}4
   </div>
 
   <h3 class="pb-2 mb-4 font-italic border-bottom text-warning"style="letter-spacing: 2px;
@@ -35,7 +33,7 @@
   <main role="main" class="container p-0">
     <div class="row mb-2">
       {% for post in posts %}
-        <div class="col-md-6">
+        <div class="col-md-4">
           <div class="card border-0" >
             <div class="card-body">
               <h3> <a href="{% url 'blog_detail' slug=post.Slug %}" class="text-dark">{{ post.Title }}</a></h3>
@@ -47,28 +45,32 @@
       {% endfor %}
       <!-- /.blog-main -->
 
-      <aside class="col-md-4 blog-sidebar">
         <!-- ...existing code... -->
-        <div class="p-3 mb-3 bg-light rounded">
-          <h4 class="font-italic">{{ about.heading }}</h4>
-          <p class="mb-0">{{ about.description }}</p>
+         <div class="col-md-9 blog-sidebar">
+
+           <div class="p-3 mb-3 bg-light rounded">
+             <h4 class="font-italic">{{ about.heading }}</h4>
+             <p class="mb-1">{{ about.description|linebreaksbr }}</p>
+            </div>
+          </div>
+            <!-- ...existing code... -->
+             <div class="col-md-3">
+            {% if social_links %}
+            <div class="p-3">
+              <h4 class="font-italic">Follow Us</h4>
+              {%for slink in social_link%}
+              <ol class="list-unstyled">
+                <li><a href="{{ slink.link }}" target="_blank">{{slink.platform}}</a></li>
+              </ol>
+              {% endfor %}
+            </div>
+            {% endif %}
+            
+          </div><!-- /.row -->
+          
         </div>
-        <!-- ...existing code... -->
-        {% if social_links %}
-          <div class="p-3">
-            <h4 class="font-italic">Follow Us</h4>
-            {%for slink in social_link%}
-            <ol class="list-unstyled">
-              <li><a href="{{ slink.link }}" target="_blank">{{slink.platform}}</a></li>
-            </ol>
-            {% endfor %}
-         </div>
-        {% endif %}
-      </aside><!-- /.blog-sidebar -->
-
-    </div><!-- /.row -->
-
-  </main><!-- /.container -->
-
-</div>
-{% endblock %}
+        </main><!-- /.container -->
+        
+      </div>
+      {% endblock %}
+      

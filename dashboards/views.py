@@ -58,6 +58,7 @@ def posts(request):
     }
     return render(request, 'dashboard/posts.html', context)
 
+@login_required(login_url='login')
 def add_post(request):
     if request.method=='POST':
         form = PostForm(request.POST, request.FILES)
@@ -75,6 +76,7 @@ def add_post(request):
     }
     return render(request, 'dashboard/add_post.html', context)
 
+@login_required(login_url='login')
 def edit_post(request, pk):
     post = get_object_or_404(Blog, pk=pk, Author=request.user)
     if request.method == 'POST':
@@ -93,6 +95,7 @@ def edit_post(request, pk):
     }
     return render(request, 'dashboard/edit_post.html', context)
 
+@login_required(login_url='login')
 def delete_post(request, pk):
     post = get_object_or_404(Blog, pk=pk, Author=request.user)
     post.delete()

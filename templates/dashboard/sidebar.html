@@ -8,7 +8,7 @@
 			{% endif %}
 			<a href="{% url 'categories' %}" class="list-group-item list-group-item-action {% if 'categories/' in request.path %}active{% endif %}">Category</a>
 			<a href="{% url 'posts' %}" class="list-group-item list-group-item-action {% if 'posts/' in request.path %}active{% endif %}">Posts</a>
-			<a href="" class="list-group-item list-group-item-action text-danger">Logout</a>
+			<a href="{% url 'logout' %}" class="list-group-item list-group-item-action text-danger">Logout</a>
 		</div>
 	</div>
 {% endblock %}
