@@ -25,24 +25,34 @@ This project is organized into separate Django apps:
 
 ## Main Features
 
-- Public home page with featured and latest published posts.
-- Post detail page using slug-based URLs.
-- Category-wise post listing.
-- Search across title, description, and post body.
-- User registration, login, and logout.
-- Dashboard section for:
-	- Category add/edit/delete
-	- Post add/edit/delete
-- Image upload support for blog posts.
-- Shared sidebar data via context processors (categories and social links).
+- **Public Home Page**: Displays featured posts in a hero section and recent articles in a grid layout
+- **Post Detail Pages**: Full blog post content with slug-based URLs
+- **Comments System**: Authenticated users can leave comments on blog posts
+- **Category Browsing**: Browse and filter posts by category
+- **Search Functionality**: Search posts across title, description, and post body
+- **User Authentication**: 
+  - User registration with secure password handling
+  - Login and logout functionality
+  - Protected dashboard requiring authentication
+- **Dashboard Management** (Authentication Required):
+  - **Categories**: Add, edit, delete blog categories
+  - **Blog Posts**: Create, edit, delete posts with image uploads
+  - **Users**: Manage user accounts from the dashboard
+- **Image Upload Support**: Upload and manage blog post images with automatic date-based organization
+- **About Section**: Display about page content with proper paragraph formatting
+- **Social Links**: Showcase social media links in the sidebar
+- **Responsive Design**: Mobile-friendly layout using Bootstrap 4
 
 ## Tech Stack
 
-- Python 3
-- Django 5.2.13
-- SQLite (default database)
-- django-crispy-forms + crispy-bootstrap4
-- Pillow (image upload processing)
+- **Python 3.11+**
+- **Django 5.2.13** - Web framework
+- **SQLite** - Default database (easily switchable to PostgreSQL/MySQL for production)
+- **Bootstrap 4.0** - Responsive UI framework
+- **Font Awesome 4.7** - Icon library
+- **django-crispy-forms** - Enhanced form rendering
+- **crispy-bootstrap4** - Bootstrap 4 template pack for crispy forms
+- **Pillow** - Image processing for blog post uploads
 
 ## Project Structure
 
@@ -210,10 +220,33 @@ python manage.py runserver
 python manage.py createsuperuser
 python manage.py collectstatic
 ```
+**Uploaded Files**: Blog post images are stored in `media/uploads/` with automatic date-based directory structure (`YYYY/MM/DD/`)
+- **Static Files**: CSS and images are served via `STATICFILES_DIRS` configuration in `settings.py`
+- **Context Processors**: Categories and social links are globally available to all templates via `blogs/context_processors.py`
+- **Slug Generation**: Blog post slugs are automatically generated from titles and must be unique
+- **Post Status**: Blog posts can be set as "Draft" or "Published"; only published posts appear on the public site
+- **Featured Posts**: Posts can be marked as featured to appear in the featured section on the homepage
+- **Comments System**: Each blog post can have multiple comments; comments are linked to both the post and the authenticated user
+- **Authentication**: The dashboard requires user login; post author is automatically set to the currently logged-in user
+- **About Section**: The about description properly renders line breaks using Django's `linebreaksbr` template filter
 
-## Notes
+## Development Workflow
 
-- Uploaded files are stored under `media/uploads/`.
+1. Create/edit categories in the dashboard
+2. Create blog posts with featured images and set publish status
+3. Add social media links via Django admin
+4. Update about section content in Django admin
+5. Users can browse, search, and comment on published posts
+
+## For Production Deployment
+
+1. Set `DEBUG = False` in `settings.py`
+2. Configure `ALLOWED_HOSTS` with your domain(s)
+3. Use a production-grade database (PostgreSQL recommended)
+4. Set up a proper web server (Gunicorn + Nginx)
+5. Serve static/media files via WhiteNoise or a CDN
+6. Enable HTTPS and set `SECURE_SSL_REDIRECT = True`
+7. Store sensitive settings in environment variables
 - Static files are configured using `STATICFILES_DIRS` and `STATIC_ROOT` in settings.
 - Context processors are configured for categories and social links.
 - For production deployment, set `DEBUG = False`, configure `ALLOWED_HOSTS`, and serve static/media from a proper web server.
