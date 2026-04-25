@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 class CategoryForm(forms.ModelForm):
     class Meta:
         model = Categories
-        fields ='__all__'
+        fields = ('Category_name',)
 
 class PostForm(forms.ModelForm):
     class Meta:

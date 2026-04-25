@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 # Create your models here.
 class Categories(models.Model):
     Category_name = models.CharField(max_length=50, unique=True)
+    Author = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     Created_at = models.DateTimeField(auto_now_add=True)
     Updated_at = models.DateTimeField(auto_now=True)
 

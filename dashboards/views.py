@@ -1,4 +1,5 @@
 from django.shortcuts import get_object_or_404, redirect, render
+from django.http import HttpResponseForbidden
 from .forms import AddUserForm, CategoryForm, EditUserForm, PostForm
 from blogs.models import Blog, Categories
 from django.contrib.auth.decorators import login_required
@@ -14,15 +15,23 @@ def dashboard(request):
     }
     return render(request, 'dashboard/dashboard.html', context)
 
+@login_required(login_url='login')
 def categories(request):
-    return render(request, 'dashboard/categories.html')
+    categories = Categories.objects.all().order_by('-Created_at')
+    context = {
+        'categories': categories,
+    }
+    return render(request, 'dashboard/categories.html', context)
 
 
+@login_required(login_url='login')
 def add_category(request):
     if request.method=='POST':
         form = CategoryForm(request.POST)
         if form.is_valid():
-            form.save()
+            category = form.save(commit=False)
+            category.Author = request.user
+            category.save()
             return redirect('categories')
     form = CategoryForm()
     context={
@@ -30,8 +39,11 @@ def add_category(request):
     }
     return render(request, 'dashboard/add_category.html', context)
 
+@login_required(login_url='login')
 def edit_category(request, pk):
     category = get_object_or_404(Categories, pk=pk)
+    if category.Author != request.user and not request.user.is_staff and not request.user.is_superuser:
+        return HttpResponseForbidden('You do not have permission to edit this category.')
     if request.method == 'POST':
         form = CategoryForm(request.POST, instance=category)
         if form.is_valid():
@@ -45,8 +57,11 @@ def edit_category(request, pk):
     }
     return render(request, 'dashboard/edit_category.html', context)
 
+@login_required(login_url='login')
 def delete_category(request, pk):
     category = get_object_or_404(Categories, pk=pk)
+    if category.Author != request.user and not request.user.is_staff and not request.user.is_superuser:
+        return HttpResponseForbidden('You do not have permission to delete this category.')
     category.delete()
     return redirect('categories')
 
@@ -78,7 +93,9 @@ def add_post(request):
 
 @login_required(login_url='login')
 def edit_post(request, pk):
-    post = get_object_or_404(Blog, pk=pk, Author=request.user)
+    post = get_object_or_404(Blog, pk=pk)
+    if post.Author != request.user and not request.user.is_staff and not request.user.is_superuser:
+        return HttpResponseForbidden('You do not have permission to edit this post.')
     if request.method == 'POST':
         form = PostForm(request.POST, request.FILES, instance=post)
         if form.is_valid():
@@ -97,7 +114,9 @@ def edit_post(request, pk):
 
 @login_required(login_url='login')
 def delete_post(request, pk):
-    post = get_object_or_404(Blog, pk=pk, Author=request.user)
+    post = get_object_or_404(Blog, pk=pk)
+    if post.Author != request.user and not request.user.is_staff and not request.user.is_superuser:
+        return HttpResponseForbidden('You do not have permission to delete this post.')
     post.delete()
     return redirect('posts')
 
